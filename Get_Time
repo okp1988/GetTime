@@ -1,0 +1,45 @@
+protected void GetTime() 
+{
+	string Result = "";
+
+	// VARIABLE
+	int loop = 0, hr = 0, min = 0, sec = 0;
+	int hrCounter = 0, minCounter = 0, secCounter = 0;
+	int hrPerLoop = 12, minPerHr = 60, secPerMin = 60, secPerHr = minPerHr * secPerMin;
+
+	// INTERVAL PER SECOND(S)
+	// HR = 1/120, MIN = 12/120, SEC = 720/120
+	int hrInterval = 1, minInterval = 12, secInterval = 720;
+
+	// TOTAL COUNTER SECONDS FOR 12 HOURS
+	int totalCounter = secInterval * hrPerLoop * minPerHr * secPerMin; //31104000
+
+	// INTERVAL IN HOUR & MINUTE
+	int intervalSecPerHour = secInterval * minPerHr * secPerMin; //2592000
+	int intervalSecPerMinute = secInterval * minPerHr; //43200
+	int intervalMinPerHour = minInterval * minPerHr * secPerMin; //43200
+	int intervalHrPerLoop = hrInterval * hrPerLoop * minPerHr * secPerMin; //43200
+
+	while (secCounter < totalCounter)
+	{
+		hrCounter = hrCounter + hrInterval;
+		minCounter = minCounter + minInterval;
+		secCounter = secCounter + secInterval;
+
+		// GET LOOP (12 UNITS PER LOOP) & HOURS
+		loop = (hrCounter / intervalHrPerLoop);
+		hr = (minCounter / intervalMinPerHour);
+		// DEDUCT TILL LEFT MINUTES
+		min = ((minCounter - (hr * intervalMinPerHour)) / 720);
+		// DEDUCT TILL LEFT SECONDS
+		sec = ((secCounter - (hr * intervalSecPerHour) - (min * intervalSecPerMinute)) / secInterval);
+
+		// +- 5 in order to get the best result
+		if (Math.Abs((hrCounter - (loop * intervalHrPerLoop)) - (minCounter - (hr * intervalMinPerHour))) < 6)
+		{
+			Result = Result + hr.ToString("00") + " : " + min.ToString("00") + " : " + sec.ToString("00") + Environment.NewLine;
+		}
+	}
+
+	MessageBox.Show(Result);
+}
